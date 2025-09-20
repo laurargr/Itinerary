@@ -1,4 +1,4 @@
-import FileMenagment.FileMenagment;
+import service.FileMenagment;
 public class Main {
     public static void main(String[] args) {
 
@@ -25,5 +25,6 @@ public class Main {
         }
         fileManagment.readInputFile(input);
         fileManagment.createFile(output);
+        fileManagment.readLookupFile(airportLookup);
     }
 }
