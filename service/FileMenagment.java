@@ -9,10 +9,12 @@ import java.util.List;
 
 public class FileMenagment {
    List<String> inputArr;
+   List<String> outputArr;
    List <AirportLookup> airportLookups;
 
     public FileMenagment() {
         this.inputArr = new ArrayList<String>();
+        this.outputArr = new ArrayList<String>();
         this.airportLookups = new ArrayList<AirportLookup>();
     }
 
@@ -50,7 +52,38 @@ public class FileMenagment {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    public void parseData () {
+       for (int i = 0; i < inputArr.size(); i++) {
+           String [] words = inputArr.get(i).split(" ");
+           for (int a = 0; a < words.length; a++) {
+               if (words[a].startsWith("#")){
+                   String location = parseIataCode(words[a]);
+                   words[a] = location;
+               }
+               if (words[a].startsWith("##")){
+                   String location = parseIcaoCode(words[a]);
+                   words[a] = location;
+               }
+               continue;
+           }
+           outputArr = List.of(words);
+       }
+    }
+
+    public String parseIataCode(String code){
+        code.startsWith("#");
+
+
+        return code;
+    }
+
+    public String parseIcaoCode(String code){
+        code.startsWith("##");
+
+
+        return code;
     }
 
     public void createFile(String fileToCreate) {
