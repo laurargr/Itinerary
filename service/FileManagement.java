@@ -2,7 +2,12 @@ package service;
 
 import model.AirportLookup;
 
+import javax.swing.text.html.HTMLDocument;
 import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +70,10 @@ public class FileManagement {
                    String resultName = parseIcaoCode(words[a]);
                    words[a] = resultName;
                }
+               if (words[a].startsWith("D") && words[a].endsWith(")")) {
+                   String date = words[a].substring(2, (words[a].length()-1));
+                   words[a] = parseDate(date);
+               }
            }
            String joined = String.join(" ", words);
            outputList.add(joined);
@@ -92,6 +101,16 @@ public class FileManagement {
        }
        return code;
     }
+
+    public String parseDate (String date) {
+        LocalDate ld;
+        date = date.replace("−", "-");
+        OffsetDateTime odt = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        ld = odt.toLocalDate();
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
+        return ld.format(outputFormatter);
+    }
+
 
     public void createFile(String fileToCreate) {
         try {
