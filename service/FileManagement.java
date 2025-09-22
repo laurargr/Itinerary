@@ -72,16 +72,16 @@ public class FileManagement {
                    words[a] = resultName;
                }
                if (words[a].startsWith("D") && words[a].endsWith(")")) {
-                   String date = words[a].substring(2, (words[a].length()-1));
-                   words[a] = parseDate(date);
+                   String resultDate = parseDate(words[a]);
+                   words[a] = resultDate;
                }
                if (words[a].startsWith("T12") && words[a].endsWith(")")) {
-                   String timeT12 = words[a].substring(4, (words[a].length()-1));
-                   words[a] = parseTime12(timeT12);
+                   String timeT12 = parseTime12(words[a]);
+                   words[a] = timeT12;
                }
                if (words[a].startsWith("T24") && words[a].endsWith(")")) {
-                   String timeT24 = words[a].substring(4, (words[a].length()-1));
-                   words[a] = parseTime24(timeT24);
+                   String timeT24 = parseTime24(words[a]);
+                   words[a] = timeT24;
                }
            }
            String joined = String.join(" ", words);
@@ -112,26 +112,47 @@ public class FileManagement {
     }
 
     public String parseDate (String date) {
-        LocalDate ld;
-        date = date.replace("−", "-");
-        OffsetDateTime odt = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        ld = odt.toLocalDate();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
-        return ld.format(dateFormatter);
+        int n = date.length();
+        String subDate = date.substring(2, (n -1));
+        try {
+            LocalDate ld;
+            subDate = subDate.replace("−", "-");
+            OffsetDateTime odt = OffsetDateTime.parse(subDate, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            ld = odt.toLocalDate();
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
+            return ld.format(dateFormatter);
+        } catch (Exception e) {
+            return date;
+        }
+
     }
 
     public String parseTime12 (String time) {
-        time = time.replace("−", "-");
-        OffsetDateTime odt = OffsetDateTime.parse(time, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mma (XXX)");
-        return  odt.format(timeFormatter);
+        int n = time.length();
+        String subTime = time.substring(4, (n -1));
+        try {
+            subTime = subTime.replace("−", "-");
+            OffsetDateTime odt = OffsetDateTime.parse(subTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mma (XXX)");
+            return  odt.format(timeFormatter);
+        } catch (Exception e) {
+            return time;
+        }
+
     }
 
     public String parseTime24 (String time) {
-        time = time.replace("−", "-");
-        OffsetDateTime odt = OffsetDateTime.parse(time, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm (XXX)");
-        return  odt.format(timeFormatter);
+        int n = time.length();
+        String subTime = time.substring(4, (n-1));
+        try {
+            subTime = subTime.replace("−", "-");
+            OffsetDateTime odt = OffsetDateTime.parse(subTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm (XXX)");
+            return  odt.format(timeFormatter);
+        } catch (Exception e) {
+            return time;
+        }
+
     }
 
     public void createFile(String fileToCreate) {
