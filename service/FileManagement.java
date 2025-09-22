@@ -4,17 +4,16 @@ import model.AirportLookup;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class FileMenagment {
-   List<String> inputArr;
-   List<String> outputArr;
+public class FileManagement {
+   List<String> inputList;
+   List<String> outputList;
    List <AirportLookup> airportLookups;
 
-    public FileMenagment() {
-        this.inputArr = new ArrayList<String>();
-        this.outputArr = new ArrayList<String>();
+    public FileManagement() {
+        this.inputList = new ArrayList<String>();
+        this.outputList = new ArrayList<String>();
         this.airportLookups = new ArrayList<AirportLookup>();
     }
 
@@ -29,11 +28,11 @@ public class FileMenagment {
             BufferedReader br = new BufferedReader(r);
             String line;
             while ((line = br.readLine()) != null) {
-                inputArr.add(line.trim());
+                inputList.add(line.trim());
             }
             br.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error reading input file");
         }
     }
 
@@ -50,52 +49,60 @@ public class FileMenagment {
             }
             br.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error reading lookup file");
         }
     }
 
     public void parseData () {
-       for (int i = 0; i < inputArr.size(); i++) {
-           String [] words = inputArr.get(i).split(" ");
+       for (int i = 0; i < inputList.size(); i++) {
+           String [] words = inputList.get(i).split(" ");
            for (int a = 0; a < words.length; a++) {
                if (words[a].startsWith("#")){
-                   String location = parseIataCode(words[a]);
-                   words[a] = location;
+                   String resultName = parseIataCode(words[a]);
+                   words[a] = resultName;
                }
                if (words[a].startsWith("##")){
-                   String location = parseIcaoCode(words[a]);
-                   words[a] = location;
+                   String resultName = parseIcaoCode(words[a]);
+                   words[a] = resultName;
                }
-               continue;
            }
-           outputArr = List.of(words);
+           String joined = String.join(" ", words);
+           outputList.add(joined);
        }
     }
 
     public String parseIataCode(String code){
-        code.startsWith("#");
-
-
+        String subCode = code.substring(1, 4);
+        for (int i = 0; i < airportLookups.size(); i++) {
+            AirportLookup lookup = airportLookups.get(i);
+            if (lookup.getIataCode().equals(subCode)) {
+                return lookup.getName();
+            }
+        }
         return code;
     }
 
     public String parseIcaoCode(String code){
-        code.startsWith("##");
-
-
-        return code;
+       String subCode = code.substring(2, 6);
+       for (int i = 0; i < airportLookups.size(); i++) {
+           AirportLookup lookup = airportLookups.get(i);
+           if(lookup.getIcaoCode().equals(subCode)){
+               return lookup.getName();
+           }
+       }
+       return code;
     }
 
     public void createFile(String fileToCreate) {
         try {
             FileWriter fw = new FileWriter(fileToCreate);
-            for (int i = 0; i < inputArr.size(); i++) {
-                fw.write(inputArr.get(i) + "\n");
+            for (int i = 0; i < outputList.size(); i++) {
+                fw.write(outputList.get(i) + "\n");
             }
             fw.close();
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Error creating output file");
         }
     }
 }

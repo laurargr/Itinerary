@@ -1,4 +1,4 @@
-import service.FileMenagment;
+import service.FileManagement;
 public class Main {
     public static void main(String[] args) {
 
@@ -14,7 +14,7 @@ public class Main {
         output = args[1];
         airportLookup = args[2];
 
-        FileMenagment fileManagment= new FileMenagment();
+        FileManagement fileManagment= new FileManagement();
         if (fileManagment.fileExist(input) != true) {
             System.out.println("Input file does not exist");
             System.exit(1);
@@ -24,7 +24,8 @@ public class Main {
             System.exit(1);
         }
         fileManagment.readInputFile(input);
-        fileManagment.createFile(output);
         fileManagment.readLookupFile(airportLookup);
+        fileManagment.parseData();
+        fileManagment.createFile(output);
     }
 }
