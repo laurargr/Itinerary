@@ -6,6 +6,7 @@ import javax.swing.text.html.HTMLDocument;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -74,6 +75,14 @@ public class FileManagement {
                    String date = words[a].substring(2, (words[a].length()-1));
                    words[a] = parseDate(date);
                }
+               if (words[a].startsWith("T12") && words[a].endsWith(")")) {
+                   String timeT12 = words[a].substring(4, (words[a].length()-1));
+                   words[a] = parseTime12(timeT12);
+               }
+               if (words[a].startsWith("T24") && words[a].endsWith(")")) {
+                   String timeT24 = words[a].substring(4, (words[a].length()-1));
+                   words[a] = parseTime24(timeT24);
+               }
            }
            String joined = String.join(" ", words);
            outputList.add(joined);
@@ -107,10 +116,23 @@ public class FileManagement {
         date = date.replace("−", "-");
         OffsetDateTime odt = OffsetDateTime.parse(date, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
         ld = odt.toLocalDate();
-        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
-        return ld.format(outputFormatter);
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
+        return ld.format(dateFormatter);
     }
 
+    public String parseTime12 (String time) {
+        time = time.replace("−", "-");
+        OffsetDateTime odt = OffsetDateTime.parse(time, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mma (XXX)");
+        return  odt.format(timeFormatter);
+    }
+
+    public String parseTime24 (String time) {
+        time = time.replace("−", "-");
+        OffsetDateTime odt = OffsetDateTime.parse(time, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm (XXX)");
+        return  odt.format(timeFormatter);
+    }
 
     public void createFile(String fileToCreate) {
         try {
