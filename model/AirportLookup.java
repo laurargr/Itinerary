@@ -17,6 +17,12 @@ public class AirportLookup {
         this.coordinates = new Coordinates(latitude, longitude);
     }
 
+    public boolean isValid() {
+        if (this.name.trim().isEmpty() || this.isoCountry.trim().isEmpty() || this.municipality.trim().isEmpty() || this.icaoCode.trim().isEmpty() || this.iataCode.trim().isEmpty() || coordinates.isValid() == false){
+            return false;
+        }
+        return true;
+    }
     public String getName() {
         return name;
     }

@@ -8,6 +8,13 @@ public class Coordinates {
         this.longitude = longitude;
     }
 
+    public boolean isValid () {
+        if (this.longitude.trim().isEmpty() || this.latitude.trim().isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
     public String getLatitude() {
         return latitude;
     }

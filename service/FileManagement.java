@@ -39,6 +39,7 @@ public class FileManagement {
             br.close();
         } catch (IOException e) {
             System.out.println("Error reading input file");
+            System.exit(1);
         }
     }
 
@@ -50,8 +51,18 @@ public class FileManagement {
             br.readLine();
             while ((line = br.readLine()) != null) {
                 String [] lookups = line.split(",");
-                AirportLookup a = new AirportLookup(lookups[0], lookups[1], lookups[2], lookups[3],lookups[4],lookups[5],lookups[6]);
-                airportLookups.add(a);
+                if (lookups.length < 7) {
+                    System.out.println("Lookup file data is malformed");
+                    System.exit(1);
+                }
+                    AirportLookup a = new AirportLookup(lookups[0], lookups[1], lookups[2], lookups[3],lookups[4],lookups[5],lookups[6]);
+                if (a.isValid()) {
+                    airportLookups.add(a);
+                }
+                else {
+                    System.out.println("Lookup file data is malformed");
+                    System.exit(1);
+                }
             }
             br.close();
         } catch (IOException e) {
@@ -159,7 +170,7 @@ public class FileManagement {
         try {
             FileWriter fw = new FileWriter(fileToCreate);
             for (int i = 0; i < outputList.size(); i++) {
-                fw.write(outputList.get(i) + "\n");
+                    fw.write(outputList.get(i) + "\n");
             }
             fw.close();
 
