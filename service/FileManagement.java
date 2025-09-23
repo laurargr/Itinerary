@@ -72,6 +72,11 @@ public class FileManagement {
 
     public void parseData () {
        for (int i = 0; i < inputList.size(); i++) {
+           String line = inputList.get(i);
+           line.replace('\u000B', '\n').replace('\f', '\n').replace('\r', '\n');
+           if (i != inputList.size()-1) {
+               if (line.trim().isEmpty() && inputList.get(i + 1).isEmpty()) continue;
+           }
            String [] words = inputList.get(i).split(" ");
            for (int a = 0; a < words.length; a++) {
                if (words[a].startsWith("#")){
