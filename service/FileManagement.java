@@ -5,8 +5,6 @@ import model.AirportLookup;
 import javax.swing.text.html.HTMLDocument;
 import java.io.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -150,7 +148,9 @@ public class FileManagement {
             subTime = subTime.replace("−", "-");
             OffsetDateTime odt = OffsetDateTime.parse(subTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mma (XXX)");
-            return  odt.format(timeFormatter);
+            String formatted = odt.format(timeFormatter);
+            formatted = formatted.replace("(Z)", "(+00:00)");
+            return formatted;
         } catch (Exception e) {
             return time;
         }
@@ -164,7 +164,9 @@ public class FileManagement {
             subTime = subTime.replace("−", "-");
             OffsetDateTime odt = OffsetDateTime.parse(subTime, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm (XXX)");
-            return  odt.format(timeFormatter);
+            String formatted = odt.format(timeFormatter);
+            formatted = formatted.replace("(Z)", "(+00:00)");
+            return  formatted;
         } catch (Exception e) {
             return time;
         }
