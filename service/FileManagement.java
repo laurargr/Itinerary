@@ -15,6 +15,7 @@ public class FileManagement {
    List<String> outputList;
    List <AirportLookup> airportLookups;
 
+
     public FileManagement() {
         this.inputList = new ArrayList<String>();
         this.outputList = new ArrayList<String>();
@@ -85,6 +86,18 @@ public class FileManagement {
                    String resultName = parseIcaoCode(words[a]);
                    words[a] = resultName;
                }
+               if (words[a].startsWith("*#")){
+                   String resultName = words[a];
+                   String subName = resultName.substring(2, resultName.length());
+                   if (subName.length() == 3) {
+                       resultName = parseIataCode(resultName);
+                       words[a] = resultName;
+                   }
+                   else {
+                       resultName = parseIcaoCode(resultName);
+                       words[a] = resultName;
+                   }
+               }
                if (words[a].startsWith("D") && words[a].endsWith(")")) {
                    String resultDate = parseDate(words[a]);
                    words[a] = resultDate;
@@ -104,24 +117,50 @@ public class FileManagement {
     }
 
     public String parseIataCode(String code){
-        String subCode = code.substring(1, 4);
-        for (int i = 0; i < airportLookups.size(); i++) {
-            AirportLookup lookup = airportLookups.get(i);
-            if (lookup.getIataCode().equals(subCode)) {
-                return lookup.getName();
+        if (code.startsWith("*")) {
+            String subCode = code.substring(2, 5);
+            for (int i = 0; i < airportLookups.size(); i++) {
+                AirportLookup lookup = airportLookups.get(i);
+                if (lookup.getIataCode().equals(subCode)) {
+                    return lookup.getMunicipality();
+                }
             }
         }
+        else {
+            String subCode = code.substring(1, 4);
+            for (int i = 0; i < airportLookups.size(); i++) {
+                AirportLookup lookup = airportLookups.get(i);
+                if (lookup.getIataCode().equals(subCode)) {
+                    return lookup.getName();
+                }
+            }
+        }
+
         return code;
     }
 
     public String parseIcaoCode(String code){
-       String subCode = code.substring(2, 6);
-       for (int i = 0; i < airportLookups.size(); i++) {
-           AirportLookup lookup = airportLookups.get(i);
-           if(lookup.getIcaoCode().equals(subCode)){
-               return lookup.getName();
-           }
-       }
+        if (code.length() < 6) {
+            return code;
+        }
+        if (code.startsWith("*")) {
+            String subCode = code.substring(2, 6);
+            for (int i = 0; i < airportLookups.size(); i++) {
+                AirportLookup lookup = airportLookups.get(i);
+                if (lookup.getIcaoCode().equals(subCode)) {
+                    return lookup.getMunicipality();
+                }
+            }
+        }
+        else {
+            String subCode = code.substring(2, 6);
+            for (int i = 0; i < airportLookups.size(); i++) {
+                AirportLookup lookup = airportLookups.get(i);
+                if(lookup.getIcaoCode().equals(subCode)){
+                    return lookup.getName();
+                }
+            }
+        }
        return code;
     }
 
@@ -185,5 +224,6 @@ public class FileManagement {
             System.out.println("Error creating output file");
         }
     }
+
 }
 
