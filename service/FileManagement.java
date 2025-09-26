@@ -1,8 +1,5 @@
 package service;
-
 import model.AirportLookup;
-
-import javax.swing.text.html.HTMLDocument;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -14,6 +11,10 @@ public class FileManagement {
    List<String> inputList;
    List<String> outputList;
    List <AirportLookup> airportLookups;
+   public static final String ANSI_RESET = "\u001B[0m";
+   public static final String ANSI_GREEN = "\u001B[32m";
+   public static final String ANSI_RED = "\u001B[31m";
+
 
 
     public FileManagement() {
@@ -37,7 +38,7 @@ public class FileManagement {
             }
             br.close();
         } catch (IOException e) {
-            System.out.println("Error reading input file");
+            System.out.println(ANSI_RED + "Error reading input file" + ANSI_RESET);
             System.exit(1);
         }
     }
@@ -51,7 +52,7 @@ public class FileManagement {
             while ((line = br.readLine()) != null) {
                 String [] lookups = line.split(",");
                 if (lookups.length < 7) {
-                    System.out.println("Lookup file data is malformed");
+                    System.out.println(ANSI_RED + "Lookup file data is malformed" + ANSI_RESET);
                     System.exit(1);
                 }
                     AirportLookup a = new AirportLookup(lookups[0], lookups[1], lookups[2], lookups[3],lookups[4],lookups[5],lookups[6]);
@@ -59,13 +60,13 @@ public class FileManagement {
                     airportLookups.add(a);
                 }
                 else {
-                    System.out.println("Lookup file data is malformed");
+                    System.out.println(ANSI_RED + "Lookup file data is malformed" + ANSI_RESET);
                     System.exit(1);
                 }
             }
             br.close();
         } catch (IOException e) {
-            System.out.println("Error reading lookup file");
+            System.out.println(ANSI_RED + "Error reading lookup file" + ANSI_RESET);
         }
     }
 
@@ -73,9 +74,11 @@ public class FileManagement {
        for (int i = 0; i < inputList.size(); i++) {
            String line = inputList.get(i);
            line.replace('\u000B', '\n').replace('\f', '\n').replace('\r', '\n');
+
            if (i != inputList.size()-1) {
                if (line.trim().isEmpty() && inputList.get(i + 1).isEmpty()) continue;
            }
+
            String [] words = inputList.get(i).split(" ");
            for (int a = 0; a < words.length; a++) {
                if (words[a].startsWith("#")){
@@ -222,6 +225,13 @@ public class FileManagement {
 
         } catch (IOException e) {
             System.out.println("Error creating output file");
+        }
+    }
+
+    public void print() {
+
+        for (int i = 0; i < outputList.size(); i++) {
+            System.out.println(ANSI_GREEN + outputList.get(i) + ANSI_RESET);
         }
     }
 
