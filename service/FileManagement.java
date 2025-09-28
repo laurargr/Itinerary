@@ -147,7 +147,7 @@ public class FileManagement {
             return code;
         }
         if (code.startsWith("*")) {
-            String subCode = code.substring(2, 6);
+            String subCode = code.substring(3, 7);
             for (int i = 0; i < airportLookups.size(); i++) {
                 AirportLookup lookup = airportLookups.get(i);
                 if (lookup.getIcaoCode().equals(subCode)) {
