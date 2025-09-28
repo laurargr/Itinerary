@@ -5,7 +5,9 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FileManagement {
    List<String> inputList;
@@ -48,7 +50,39 @@ public class FileManagement {
             FileReader l = new FileReader(fileToLook);
             BufferedReader br = new BufferedReader(l);
             String line;
-            br.readLine();
+            String [] headers =br.readLine().split(",");
+            if (headers.length != 6) {
+                System.out.println(ANSI_RED + "Lookup file data is malformed" + ANSI_RESET);
+                System.exit(1);
+            }
+            else {
+                if (!headers[0].trim().toLowerCase().equals("name")) {
+                    System.out.println(ANSI_RED + "Lookup file data is malformed" + ANSI_RESET);
+                    System.exit(1);
+                }
+                if (!headers[1].trim().toLowerCase().equals("iso_country")) {
+                    System.out.println(ANSI_RED + "Lookup file data is malformed" + ANSI_RESET);
+                    System.exit(1);
+                }
+                if (!headers[2].trim().toLowerCase().equals("municipality")) {
+                    System.out.println(ANSI_RED + "Lookup file data is malformed" + ANSI_RESET);
+                    System.exit(1);
+                }
+                if (!headers[3].trim().toLowerCase().equals("icao_code")) {
+                    System.out.println(ANSI_RED + "Lookup file data is malformed" + ANSI_RESET);
+                    System.exit(1);
+                }
+                if (!headers[4].trim().toLowerCase().equals("iata_code")) {
+                    System.out.println(ANSI_RED + "Lookup file data is malformed" + ANSI_RESET);
+                    System.exit(1);
+                }
+                if (!headers[5].trim().toLowerCase().equals("coordinates")) {
+                    System.out.println(ANSI_RED + "Lookup file data is malformed" + ANSI_RESET);
+                    System.exit(1);
+                }
+
+            }
+
             while ((line = br.readLine()) != null) {
                 String [] lookups = line.split(",");
                 if (lookups.length < 7) {
